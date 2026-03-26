@@ -7,6 +7,9 @@
  */ 
 import Footer from "../components/Footer.astro";
 import Navbar from "../components/Navbar.astro";
+
+const currentDate = new Date().toLocaleDateString();
+const currentTime = new Date().toLocaleTimeString();
 ---
 
 <html lang="en">
@@ -21,6 +24,19 @@ import Navbar from "../components/Navbar.astro";
 	<body>
 		<Navbar />
 		<h1>Main Page</h1>
+		<p>Today's date is: {currentDate}</p>
+		<p>Static time: {currentTime}</p>
+		<p id="currentTime">Current time: </p>
 		<Footer />
+
+		<script>
+			/**
+			 * This section is for client-side JavaScript. 
+			 * It will only run in the browser, and is not executed at build time.
+			 */
+			let timeElement = document.getElementById('currentTime') as HTMLParagraphElement;
+
+			timeElement.textContent = `Current local time: ${new Date().toLocaleTimeString()}`;
+		</script>
 	</body>
 </html>
