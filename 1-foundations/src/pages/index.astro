@@ -10,8 +10,8 @@ const currentTime = new Date().toLocaleTimeString();
 import MainLayout from "../layouts/MainLayout.astro";
 ---
 
-<MainLayout>
-	<h1>Main Page</h1>
+<MainLayout title="Home Page">
+	<h1>Home Page</h1>
 	<p>Today's date is: {currentDate}</p>
 	<p>Static time: {currentTime}</p>
 	<p id="currentTime">Current time: </p>
