@@ -1,8 +1,23 @@
 ---
+import CustomTitle from "../components/CustomTitle.astro";
 import MainLayout from "../layouts/MainLayout.astro";
 ---
 
+<!--Styles can be here.-->
+
 <MainLayout title="About Page">
-    <h1>About Page</h1>
+    <h1>About Us</h1> <!-- This H1 will be red, because is in the scope. -->
+    <CustomTitle title="About Us Custom Title" /> <!-- This Component -> H1 will not be red, because is in the scope of the CustomTitle component. -->
     <p>This is the about page.</p>
+
+    <!-- Styles can be here. -->
 </MainLayout>
+
+<!-- Styles in this file will be scoped to this component only, and will not affect other components. -->
+<!-- If want to apply to all H1's in this page, use is:global directive in style tag. -->
+<!-- In index.astro H1 is and will be black, because are "pages" physicaly and sintaxly differents, two HTML's. -->
+<style is:global>
+    h1 {
+        color: red;
+    }
+</style>
