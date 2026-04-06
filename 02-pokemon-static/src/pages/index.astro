@@ -1,7 +1,28 @@
 ---
+// [ !Remember ] This part of an Astro file its for server-side code.
+
 import MainLayout from '../layouts/MainLayout.astro';
+import type { PokemonListResponse } from '../interfaces/pokemon-list.response';
+
+// Fetch the list of pokemons from the PokeAPI. We use await to wait for the response and then parse it as JSON.
+const response = await fetch('https://pokeapi.co/api/v2/pokemon');
+
+// We assert the type of the response to be PokemonListResponse, which we defined in our interfaces. This helps us with type checking and autocompletion in our code editor.
+const data = (await response.json()) as PokemonListResponse;
+console.log(data);
+
 const title = 'Pokemon Static | Home';
 ---
 <MainLayout title={title}>
-	<h1 class="text-3xl">Welcome to the Pokémon Static Site!</h1>
+	<main>
+		<h1 class="text-3xl">Pokemons List</h1>
+		<hr />
+		<ul>
+			{
+				data.results.map(( pokemon ) => (
+					<li>{pokemon.name}</li>
+				))
+			}
+		</ul>
+	</main>
 </MainLayout>
