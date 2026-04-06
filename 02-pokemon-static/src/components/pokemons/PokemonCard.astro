@@ -1,0 +1,13 @@
+---
+interface Props {
+    name: string;
+    id: string;
+}
+
+const { name, id } = Astro.props;
+---
+
+<div class="rounded border flex flex-col justify-center items-center p-2">
+    <img src=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png` alt=`${name} Image` />
+    <h2>{name}</h2>
+</div>
