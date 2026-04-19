@@ -1,6 +1,7 @@
 ---
 import type { GetStaticPaths } from "astro";
 import MainLayout from "../../layouts/MainLayout.astro";
+import PokemonCard from "../../components/pokemons/PokemonCard.astro";
 /**
  * getStaticPaths() is a function that is required for dynamic routes.
  * 
@@ -38,35 +39,14 @@ import MainLayout from "../../layouts/MainLayout.astro";
 // Another way to define the getStaticPaths function. Came from AstroSnipets.
 export const getStaticPaths = (() => {
     return [
-        {params: {name: 'bulbasaur'}},
-        {params: {name: 'ivysaur'}},
-        {params: {name: 'venusaur'}},
-        {params: {name: 'charmander'}},
-        {params: {name: 'charmeleon'}},
-        {params: {name: 'charizard'}},
-        {params: {name: 'squirtle'}},
-        {params: {name: 'wartortle'}},
-        {params: {name: 'blastoise'}},
-        {params: {name: 'caterpie'}},
-        {params: {name: 'metapod'}},
-        {params: {name: 'butterfree'}},
-        {params: {name: 'kakuna'}},
-        {params: {name: 'beedrill'}},
-        {params: {name: 'pidgey'}},
-        {params: {name: 'pidgeotto'}},
-        {params: {name: 'pidgeot'}},
-        {params: {name: 'rattata'}},
-        {params: {name: 'raticate'}},
-        {params: {name: 'spearow'}},
-        {params: {name: 'fearow'}},
-        {params: {name: 'ekans'}},
-        {params: {name: 'arbok'}},
-        {params: {name: 'pikachu'}},
-        {params: {name: 'raichu'}},
-        {params: {name: 'sandshrew'}},
-        {params: {name: 'sandslash'}},
-        {params: {name: 'nidoran-f'}},
-        {params: {name: 'nidorina'}},
+        {
+            params: {name: 'bulbasaur'},
+            props: {name: 'bulbasaur', id: '1'}
+        },
+        {
+            params: {name: 'ivysaur'},
+            props: {name: 'ivysaur', id: '2'}
+        },
     ];
 }) satisfies GetStaticPaths;
 
@@ -81,8 +61,49 @@ export const getStaticPaths = (() => {
  *
  */
 const { name } = Astro.params;
-
+const { id } = Astro.props;
+const audioSrc = `https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/${ id }.ogg`;
 ---
+
 <MainLayout title="Pokemon Detail">
-    <h1 class="text-3xl">{name}</h1>
+    <section class="mt-10 mx-10 flex flex-col justify-center items-center">
+        <div>
+            <a href="/">Regresar</a>
+            <h1 class="text-6xl capitalize">{name}</h1>
+        </div>
+
+        <PokemonCard 
+            name={name}
+            id={id}
+        />
+
+        <audio controls class="mt-5">
+            <source src={ audioSrc } type="audio/ogg" />
+            Your browser does not support the audio element.
+        </audio>
+    </section>
+
 </MainLayout>
+
+<style>
+    /**
+    * In previous version, Tailwind was often processed as a global 
+    * PostCSS plugin that looked everything at once.
+    *
+    * Now in Tailwind V4 to make builds faster, prefers to process
+    * CSS files independently. So it missing "context" and when Astro
+    * hands that small <style> block to Tailwind; Tailwind sees text-blue-500
+    * but doesn't have the "dictionary" (the theme) to know what
+    * color actually maps to.
+    *
+    * Solution? @reference imports the "dictionary" of classes and
+    * variables WITHOUT actually injecting all the Tailwind CSS code into
+    * this component again. Keeping the file size small while giving @apply
+    * the information it needs.
+    *
+    */ 
+    @reference "../../styles/global.css";
+    a {
+        @apply hover:underline text-blue-500;
+    }
+</style>
