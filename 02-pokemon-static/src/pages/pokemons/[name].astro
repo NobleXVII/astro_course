@@ -1,7 +1,9 @@
 ---
 import type { GetStaticPaths } from "astro";
+import type { PokemonListResponse } from "../../interfaces/pokemon-list.response";
 import MainLayout from "../../layouts/MainLayout.astro";
 import PokemonCard from "../../components/pokemons/PokemonCard.astro";
+
 /**
  * getStaticPaths() is a function that is required for dynamic routes.
  * 
@@ -37,7 +39,7 @@ import PokemonCard from "../../components/pokemons/PokemonCard.astro";
  */
 
 // Another way to define the getStaticPaths function. Came from AstroSnipets.
-export const getStaticPaths = (() => {
+/* export const getStaticPaths = (() => {
     return [
         {
             params: {name: 'bulbasaur'},
@@ -48,7 +50,7 @@ export const getStaticPaths = (() => {
             props: {name: 'ivysaur', id: '2'}
         },
     ];
-}) satisfies GetStaticPaths;
+}) satisfies GetStaticPaths; */
 
 /**
  * Astro.params is used exclusively for Dynamic Routing.
@@ -63,6 +65,54 @@ export const getStaticPaths = (() => {
 const { name } = Astro.params;
 const { id } = Astro.props;
 const audioSrc = `https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/${ id }.ogg`;
+
+/**
+ * By the previous code, we've been creating as "static" pages, now
+ * it's moment for create dinamically.
+ * 
+ * Static Site Generation (SSG).
+ * SSG is a web dev startegy where web pages are generated at build time
+ * rather than every time a user requests them.
+ * In a traditional website (like WordPress), the server has to talk
+ * to a db and "build" the pagre from scratch every time someone clicks
+ * a link. With SSG pages are already built and sitting on a server (or
+ * CDN), ready to be delivered instantly.
+ * Is basically get pages ready before user request them.
+ * 
+ * So we been fetched data by some place and then built the array for
+ * getStaticPaths function as return. In this case we fetched from pokeapi.
+ * 
+ * After run a npm run build we'll see that 151 pages were created for
+ * follow SSG.
+ */
+
+export const getStaticPaths = ( async () => {
+    const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=151');
+    const { results } = await response.json() as PokemonListResponse;
+    const data = results.map(({ name, url }) => ({
+        params: { name },
+        props: {
+            name,
+            id: url.split('/')[6]
+        }
+    }));
+
+    return data;
+}) satisfies GetStaticPaths;
+
+/**
+ * CODE IMPROVEMENT!!!
+ * By learnign way I used a too explicit syntax, but we can reduce
+ * it and do something more clean and covers ES6+ standard.
+ * 
+ * - Instead of use ((pokemon) => ...) we can use simple array
+ * destructuring by using: (({ name, url }) => ...). And use them.
+ * 
+ * - Match vars name in paths properties build. So, instead of
+ * { name: name, id: url.split('/')[6] } should be:
+ * { name, id: url.split ...}. Id should have been called that, but I canged just as a number.
+ */
+
 ---
 
 <MainLayout title="Pokemon Detail">
