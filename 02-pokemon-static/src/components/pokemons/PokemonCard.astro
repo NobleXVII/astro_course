@@ -7,7 +7,9 @@ interface Props {
 const { name, id } = Astro.props;
 ---
 
-<div class="rounded border flex flex-col justify-center items-center p-2">
+<!-- We use the (anchor) <a> tag to link to the dynamic page [name].astro. -->
+<a href={`/pokemons/${name}`}
+class="rounded border flex flex-col justify-center items-center p-2">
     <img src=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png` alt=`${name} Image` />
-    <h2>{name}</h2>
-</div>
+    <span class="capitalize">{name}</span>
+</a>

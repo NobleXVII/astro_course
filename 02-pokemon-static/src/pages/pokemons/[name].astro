@@ -1,0 +1,88 @@
+---
+import type { GetStaticPaths } from "astro";
+import MainLayout from "../../layouts/MainLayout.astro";
+/**
+ * getStaticPaths() is a function that is required for dynamic routes.
+ * 
+ * It creates in build-time these dynamic argumens, only these pages
+ * will be generated. The rest of the pages will return a 404 error.
+ * 
+ * While we're in development mode, Astro will generate the pages
+ * on the fly, and as a static function, every change in getStaticPaths()
+ * needs full re-build this meaning down server and up again [npm run build].
+ * 
+ * When we run npm run build, Astro will generate the pages and store
+ * them in the dist folder. Such as: 
+ * 
+ * dist/
+ * └── pages
+ *     └── pokemons
+ *         └── bulbasaur [pokemon-name - from getStaticPaths()]
+ *             └── index.html
+ * 
+ * And then we can serve the static files with a simple HTTP server.
+ * 
+ */
+
+/**
+ * Another way to define the getStaticPaths function.
+ * 
+ * export function getStaticPaths() {
+ *     return [
+ *         {params: {name: 'pikachu'}},
+ *         ... more data ...
+ *     ];
+ * }
+ */
+
+// Another way to define the getStaticPaths function. Came from AstroSnipets.
+export const getStaticPaths = (() => {
+    return [
+        {params: {name: 'bulbasaur'}},
+        {params: {name: 'ivysaur'}},
+        {params: {name: 'venusaur'}},
+        {params: {name: 'charmander'}},
+        {params: {name: 'charmeleon'}},
+        {params: {name: 'charizard'}},
+        {params: {name: 'squirtle'}},
+        {params: {name: 'wartortle'}},
+        {params: {name: 'blastoise'}},
+        {params: {name: 'caterpie'}},
+        {params: {name: 'metapod'}},
+        {params: {name: 'butterfree'}},
+        {params: {name: 'kakuna'}},
+        {params: {name: 'beedrill'}},
+        {params: {name: 'pidgey'}},
+        {params: {name: 'pidgeotto'}},
+        {params: {name: 'pidgeot'}},
+        {params: {name: 'rattata'}},
+        {params: {name: 'raticate'}},
+        {params: {name: 'spearow'}},
+        {params: {name: 'fearow'}},
+        {params: {name: 'ekans'}},
+        {params: {name: 'arbok'}},
+        {params: {name: 'pikachu'}},
+        {params: {name: 'raichu'}},
+        {params: {name: 'sandshrew'}},
+        {params: {name: 'sandslash'}},
+        {params: {name: 'nidoran-f'}},
+        {params: {name: 'nidorina'}},
+    ];
+}) satisfies GetStaticPaths;
+
+/**
+ * Astro.params is used exclusively for Dynamic Routing.
+ * When you create a file with brackets "[]" in the name, such as:
+ * [id].astro, Astro uses params to capture the values from url.
+ * 
+ * As an example, here we have dynamic route [name].astro and then
+ * retrieve name from Astro.params. Astro.params looks like:
+ * {"name": "bulbasaur"} if the url is /pokemons/bulbasaur.
+ *
+ */
+const { name } = Astro.params;
+
+---
+<MainLayout title="Pokemon Detail">
+    <h1 class="text-3xl">{name}</h1>
+</MainLayout>
